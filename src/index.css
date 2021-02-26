@@ -1,7 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
 
+
+* {
+    font-family: 'Raleway', sans-serif;
+}
 
 .navbar {
     background-color: #9e99ff;
@@ -12,6 +17,28 @@
 }
 
 .navbar-container {
-
+    display: grid;
+    grid-template-columns: 200px auto 400px;
     width: 1088px;
+    align-items: center;
+
+}
+
+.container {
+
+    width: 1366px;
+
+}
+
+.UpperContent-Left {
+    display: flex;
+
+    flex-direction: column;
+
+    flex: 1 1 70%;
+}
+
+.UpperContent-Right {
+    flex: 1 0 auto;
+
 }
