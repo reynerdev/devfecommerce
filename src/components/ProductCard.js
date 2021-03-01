@@ -1,14 +1,34 @@
+import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import noImage from '../assets/noimage.png';
+import UserContext, { TYPES } from '../contexts/UserContext';
+import { useHistory } from 'react-router-dom';
+
 const ProductCard = ({ element, index }) => {
+  const history = useHistory();
+
+  useEffect(() => {
+    console.log('Product Card');
+  });
+
   const handleImageError = (e) => {
     console.log('dsdsds');
     console.log(noImage);
     e.target.src = noImage;
   };
 
+  const {
+    dispatchShoppingCart,
+    shoppingCartCount,
+    setShoppingCartCount,
+  } = useContext(UserContext);
+
+  const handleOnClickCart = () => {
+    history.push(`/item/${element._id}`, element);
+  };
+
   return (
-    <Card className={'item mt-6 ml-6'} key={index}>
+    <Card className={'item mt-6 ml-6'} key={index} onClick={handleOnClickCart}>
       <CardImg>
         <img
           src={!element.image ? noImage : element.image}
@@ -28,7 +48,24 @@ const ProductCard = ({ element, index }) => {
         </UpperContent>
 
         <BottomContent>
-          <Button>Add to Cart</Button>
+          <Button
+            onClick={(event) => {
+              event.stopPropagation();
+              dispatchShoppingCart({
+                type: TYPES.add,
+                payload: {
+                  _id: element._id,
+                  product_name: element.product_name,
+                  product_description: element.description,
+                  product_price: element.price,
+                  product_image: element.image,
+                },
+              });
+              setShoppingCartCount(shoppingCartCount + 1);
+            }}
+          >
+            Add to Cart
+          </Button>
         </BottomContent>
       </CardContent>
     </Card>

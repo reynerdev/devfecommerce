@@ -1,9 +1,9 @@
 import ProductCard from './ProductCard';
 import Masorny from 'masonry-layout';
 import imagesLoaded from 'imagesloaded';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, memo } from 'react';
 
-const MainContent = () => {
+const MainContent = memo(() => {
   const [listItems, setListItems] = useState([]);
 
   //   console.log('MainContent');
@@ -37,6 +37,6 @@ const MainContent = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MainContent;

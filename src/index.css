@@ -3,42 +3,41 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
 
-
 * {
-    font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', sans-serif;
 }
 
 .navbar {
-    background-color: #9e99ff;
-    height: 60px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  background-color: #9e99ff;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .navbar-container {
-    display: grid;
-    grid-template-columns: 200px auto 400px;
-    width: 1088px;
-    align-items: center;
-
+  display: grid;
+  grid-template-columns: 200px auto auto;
+  width: 1088px;
+  align-items: center;
 }
 
 .container {
-
-    width: 1366px;
-
+  width: 1366px;
 }
 
 .UpperContent-Left {
-    display: flex;
+  display: flex;
 
-    flex-direction: column;
+  flex-direction: column;
 
-    flex: 1 1 70%;
+  flex: 1 1 70%;
 }
 
 .UpperContent-Right {
-    flex: 1 0 auto;
+  flex: 1 0 auto;
+}
 
+.cardDescription {
+  /* height: 100vh; */
 }

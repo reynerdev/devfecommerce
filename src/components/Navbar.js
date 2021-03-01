@@ -1,24 +1,48 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import LogoDevf from '../assets/DEVF.svg';
 import SearchIcon from '@material-ui/icons/Search';
 import CartIcon from '../assets/Cart.svg';
 import UserContext from '../contexts/UserContext';
 import { Link, useHistory } from 'react-router-dom';
-const Navbar = ({ setIsLoginClicked }) => {
-  const { user } = useContext(UserContext);
+import circleCounter from '../assets/circleCounter.svg';
+const Navbar = () => {
+  const {
+    user,
+    setUser,
+    setIsLoginClicked,
+    shoppingCarItems,
+    shoppingCartCount,
+    setShoppingCartCount,
+  } = useContext(UserContext);
   const history = useHistory();
-  const { isLoginClicked } = useContext(UserContext);
 
   const handleLoginClick = () => {
     setIsLoginClicked(true);
     history.push('/login');
   };
 
+  useEffect(() => {
+    console.log('NavBar');
+  });
+
+  const handleLoginOut = () => {
+    setUser(null);
+    window.localStorage.removeItem('token');
+  };
+
+  const handleOnClickCart = () => {
+    history.push('/cart');
+  };
+
+  const handleOnClickLogo = () => {
+    history.push('/');
+  };
+
   return (
     <div className="navbar ">
       <div className="navbar-container ">
-        <LogoWrapper>
+        <LogoWrapper onClick={handleOnClickLogo}>
           <img src={LogoDevf} alt="LOGO DEVF" />
         </LogoWrapper>
         <SearchWrapper>
@@ -29,16 +53,21 @@ const Navbar = ({ setIsLoginClicked }) => {
         </SearchWrapper>
 
         <LeftWrapper>
-          <Home>{user ? `Bienvenido ${user.name}!` : 'Bienvenido'} </Home>
+          <Home>
+            {user ? `Bienvenido ${user.name} ${user.last_name}!` : 'Bienvenido'}{' '}
+          </Home>
 
-          <Cart>
+          <Cart onClick={handleOnClickCart}>
+            <CircleCounter className="circleCounter">
+              {shoppingCartCount}
+            </CircleCounter>
             <img src={CartIcon} alt="Cart Icon" />
           </Cart>
 
           {user ? (
-            <Button onClick={handleLoginClick}>Login</Button>
+            <Button onClick={handleLoginOut}>Log Out</Button>
           ) : (
-            <Button>Log Out</Button>
+            <Button onClick={handleLoginClick}>Login</Button>
           )}
         </LeftWrapper>
       </div>
@@ -82,6 +111,10 @@ const LeftWrapper = styled.div`
   div {
     margin-left: 32px;
     cursor: pointer;
+
+    div {
+      margin-left: 0px;
+    }
   }
   justify-self: end;
 `;
@@ -92,7 +125,12 @@ const Home = styled.div`
   color: white;
   font-weight: 700;
 `;
-const Cart = styled.div``;
+const Cart = styled.div`
+  position: relative;
+  img {
+    z-index: 1;
+  }
+`;
 const Button = styled.div`
   display: flex;
   justify-content: center;
@@ -103,4 +141,23 @@ const Button = styled.div`
   color: white;
   font-weight: 700;
   cursor: pointer;
+`;
+
+const CircleCounter = styled.div`
+  margin-left: 0px;
+  height: 22px;
+  width: 22px;
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background-image: url(${circleCounter});
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
 `;

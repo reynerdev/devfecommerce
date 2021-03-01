@@ -1,66 +1,38 @@
-import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import LogoDevf from '../assets/DEVF.svg';
 import iconLogo from '../assets/ManStandUp.svg';
-import useForm, { TYPEFORM } from '../hooks/useForm.js';
+import useForm, { TYPEFORM } from '../hooks/useForm';
 import { useHistory } from 'react-router-dom';
-import UserContext from '../contexts/UserContext';
-import getUserInfo from '../utils/getUserInfo';
-
-// import 'animate.min.css';
-const Login = () => {
-  const [inputs, handleInputs] = useForm(TYPEFORM.logIn);
-  const [isLoginFailed, setIsLoginFailed] = useState(false);
+import axios from 'axios';
+const SignUp = () => {
+  const [inputs, handleInputs] = useForm(TYPEFORM.signUp);
+  const [isPasswordOk, setIsPasswordOk] = useState(true);
   const history = useHistory();
-
-  const { setIsLoginClicked, setUser, user } = useContext(UserContext);
-
   const sendForm = (inputs) => {
     console.log('sendForm');
-    axios
-      .post('https://ecomerce-master.herokuapp.com/api/v1/login', {
-        email: inputs.user,
-        password: inputs.password,
-      })
-      .then(function (response) {
-        console.log(response);
 
-        const { token } = response.data;
-
-        window.localStorage.setItem('token', token);
-        setIsLoginClicked(false);
-
-        return token;
-      })
-      .then((token) => {
-        console.log(token, 'TOKENNNN');
-        const config = {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        };
-        return axios.get(
-          'https://ecomerce-master.herokuapp.com/api/v1/user/me',
-          config
-        );
-      })
-      .then((data, status) => {
-        console.log(data, 'DATA');
-        const userData = data.data;
-        setUser({
-          ...user,
-          name: userData.user.first_name,
-          last_name: userData.user.last_name,
-          _id: userData.user._id,
-          role: userData.user.role,
+    if (inputs.password === inputs.password_confirmation) {
+      axios
+        .post('https://ecomerce-master.herokuapp.com/api/v1/signup', {
+          first_name: inputs.name,
+          last_name: inputs.lastname,
+          email: inputs.user,
+          password: inputs.password,
+        })
+        .then(function (response) {
+          console.log(response);
+          if (inputs.password === inputs.password_confirmation) {
+            history.push('/');
+          }
+        })
+        .catch(function (error) {
+          setIsPasswordOk(false);
+          console.log(error.response.data, 'ERROR');
         });
-        history.push('/');
-      })
-      .catch(function (error) {
-        setIsLoginFailed(true);
-        console.log(error, 'ERROR');
-      });
+    } else {
+      setIsPasswordOk(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -80,11 +52,35 @@ const Login = () => {
           <img src={LogoDevf} alt="Logo Devf" width="200px" />
         </Logo>
         <UserInput>
+          <div>Nombre</div>
+          <input
+            type="text"
+            value={inputs.name}
+            onChange={handleInputs}
+            required
+            placeholder="Ingrese Nombre"
+            id="name"
+          />
+        </UserInput>
+
+        <UserInput>
+          <div>Apellido</div>
+          <input
+            type="text"
+            value={inputs.lastname}
+            onChange={handleInputs}
+            required
+            placeholder="Ingrese Apellido"
+            id="lastname"
+          />
+        </UserInput>
+
+        <UserInput>
           <div>Usuario</div>
           <input
             type="text"
-            value={inputs.user}
             required
+            value={inputs.user}
             onChange={handleInputs}
             placeholder="Ingrese Usuario"
             id="user"
@@ -94,18 +90,28 @@ const Login = () => {
         <UserInput>
           <div>Contraseña</div>
           <input
-            value={inputs.password}
             type="password"
+            value={inputs.password}
             onChange={handleInputs}
             required
             placeholder="Ingrese Contraseña"
             id="password"
           />
         </UserInput>
+        <UserInput>
+          <div>Vuelva a ingresar contraseña</div>
+          <input
+            type="password"
+            value={inputs.password_confirmation}
+            onChange={handleInputs}
+            required
+            placeholder="Ingrese Contraseña"
+            id="password_confirmation"
+          />
+        </UserInput>
+        {!isPasswordOk && <Incorrect>Las contraseñas son iguales !</Incorrect>}
 
-        {isLoginFailed && <ButtonIncorrect>INCORRECTO</ButtonIncorrect>}
-
-        <Button type="submit">INICIAR SESION</Button>
+        <Button type="submit"> REGISTRARSE !</Button>
       </LoginForm>
     </LoginWrapper>
   );
@@ -122,14 +128,14 @@ const LoginWrapper = styled.div`
 
 const StandUpLogoWrapper = styled.div`
   position: absolute;
-  top: 225px;
+  bottom: 0px;
   left: -300px;
 `;
 
 const LoginForm = styled.form`
   background-color: #4c45b3;
   width: 600px;
-  height: 600px;
+  /* height: 600px; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -160,7 +166,7 @@ const UserInput = styled.div`
   }
 `;
 const Logo = styled.div`
-  margin-bottom: 48px;
+  margin-bottom: 36px;
 `;
 
 const Button = styled.button`
@@ -170,20 +176,13 @@ const Button = styled.button`
   font-weight: 700;
   display: flex;
   align-items: center;
-  margin-bottom: 36px;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.2);
-  :active {
-    box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.2);
-  }
-
-  :focus {
-    outline: none;
-  }
+  margin-bottom: 36px;
 `;
 
-const ButtonIncorrect = styled.div`
+const Incorrect = styled.div`
+  margin-top: 12px;
   width: 100%;
   height: 48px;
   background-color: #ff7467;
@@ -193,6 +192,6 @@ const ButtonIncorrect = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 36px;
-  cursor: pointer;
 `;
-export default Login;
+
+export default SignUp;
