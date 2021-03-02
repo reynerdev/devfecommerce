@@ -42,7 +42,7 @@ const Navbar = () => {
   return (
     <div className="navbar ">
       <div className="navbar-container ">
-        <LogoWrapper onClick={handleOnClickLogo}>
+        <LogoWrapper onClick={handleOnClickLogo} style={{ cursor: 'pointer' }}>
           <img src={LogoDevf} alt="LOGO DEVF" />
         </LogoWrapper>
         <SearchWrapper>

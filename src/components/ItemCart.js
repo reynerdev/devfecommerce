@@ -1,13 +1,44 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Plus from '../assets/plus.svg';
 import Minus from '../assets/minus.svg';
 import Delete from '../assets/Delete.svg';
+import UserContext, { TYPES } from '../contexts/UserContext';
 const logo =
   'https://www.sincable.mx/wp-content/uploads/2020/01/patrick-ward-z_dLXnQg0JY-unsplash-1024x664.jpg';
 
-const ItemCart = ({ item }) => {
+const ItemCart = ({ item, setTotal, total }) => {
   console.log(item, 'ITEMMMMMMMMMMMM');
+
+  const {
+    dispatchShoppingCart,
+    shoppingCartCount,
+    setShoppingCartCount,
+  } = useContext(UserContext);
+
+  const handleOnDeleteItem = () => {
+    console.log('handleOnDeleteItem', item);
+
+    dispatchShoppingCart({ type: TYPES.delete, payload: item });
+    setShoppingCartCount(shoppingCartCount - item.count);
+  };
+
+  const handleAddOneItem = () => {
+    dispatchShoppingCart({ type: TYPES.add, payload: item });
+    setShoppingCartCount(shoppingCartCount + 1);
+  };
+
+  const handleRemoveOneItem = () => {
+    if (item.count > 1) {
+      console.log('handleRemoveOneItem');
+      dispatchShoppingCart({ type: TYPES.deleteOne, payload: item });
+      setShoppingCartCount(shoppingCartCount - 1);
+    }
+  };
+
+  useEffect(() => {
+    setTotal(total + item.subtotal);
+  }, [shoppingCartCount]);
   return (
     <ItemCartWrapper className="mb-5">
       <LogoWrapper>
@@ -21,18 +52,18 @@ const ItemCart = ({ item }) => {
       </ContentItem>
 
       <ItemCountWrapper>
-        <PlusIconWrapper>
+        <PlusIconWrapper onClick={handleAddOneItem}>
           <img src={Plus} alt="Plus" />
         </PlusIconWrapper>
         <Count>{item.count}</Count>
-        <MinusIconWrapper>
+        <MinusIconWrapper onClick={handleRemoveOneItem}>
           <img src={Minus} alt="Minus" />
         </MinusIconWrapper>
       </ItemCountWrapper>
 
       <PriceWrapper>{`$ ${item.product_price}`}</PriceWrapper>
 
-      <DeleteIconWrapper>
+      <DeleteIconWrapper onClick={handleOnDeleteItem}>
         <img src={Delete} alt="Delete" />
       </DeleteIconWrapper>
     </ItemCartWrapper>
@@ -87,6 +118,7 @@ const PlusIconWrapper = styled.div`
   align-items: center;
 
   padding: 10px;
+  cursor: pointer;
 `;
 
 const Count = styled.div`
@@ -105,6 +137,7 @@ const MinusIconWrapper = styled.div`
   align-items: center;
 
   padding: 10px;
+  cursor: pointer;
 `;
 
 const PriceWrapper = styled.div`
@@ -121,5 +154,6 @@ const DeleteIconWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex: 0 0 50px;
+  cursor: pointer;
   /* margin-left: 30px; */
 `;

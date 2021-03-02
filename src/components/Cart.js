@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import ItemCart from './ItemCart';
 import arrowLeft from '../assets/arrowLeft.svg';
@@ -7,12 +7,25 @@ import { useHistory } from 'react-router-dom';
 
 const Cart = () => {
   const history = useHistory();
+  const [total, setTotal] = useState(0);
   const { shoppingCarItems } = useContext(UserContext);
 
-  console.log(shoppingCarItems);
+  console.log(shoppingCarItems, 'Shopping Car Item');
 
   const handleOnCLickContinueShopping = () => {
     history.goBack();
+  };
+
+  const orderSummaryItem = (name, subTotal) => {
+    console.log('orderSummaryItem');
+    return (
+      <div className="flex subtotal">
+        <div className="" style={{ width: '200px', marginRight: '50px' }}>
+          {name}
+        </div>
+        <div className="">{subTotal}</div>
+      </div>
+    );
   };
 
   return (
@@ -31,14 +44,24 @@ const Cart = () => {
           <ShoppingCartTitle>Shoppping Cart</ShoppingCartTitle>
           <ShoppingCartList>
             {shoppingCarItems.map((element, index) => {
-              return <ItemCart item={element} key={index} />;
+              return (
+                <ItemCart
+                  item={element}
+                  key={index}
+                  setTotal={setTotal}
+                  total={total}
+                />
+              );
             })}
           </ShoppingCartList>
         </ShoppingCartWrapper>
       </LeftSideWrapper>
       <OrderSummaryWrapper>
-        <div>Order Summary</div>
-        <Total>Total: {}</Total>
+        <div className="mb-5">Order Summary</div>
+        {shoppingCarItems.map((element) => {
+          return orderSummaryItem(element.product_name, element.subtotal);
+        })}
+        <Total>Total: {total}</Total>
         <div className="flex justify-center">
           <ButtonOrder>Check Out</ButtonOrder>
         </div>
@@ -78,6 +101,11 @@ const OrderSummaryWrapper = styled.div`
   font-weight: 700;
   font-size: 24px;
   background-color: white;
+
+  .subtotal {
+    color: #cbd2d9;
+    font-size: 16px;
+  }
 `;
 
 const ShoppingCartWrapper = styled.div``;

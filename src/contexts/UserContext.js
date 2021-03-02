@@ -5,6 +5,7 @@ const TYPES = {
   add: 'add',
   delete: 'delete',
   filter: 'filter',
+  deleteOne: 'deleteOne',
 };
 const initialUser = { id: '', first_name: '', role: '', email: '', _id: '' };
 
@@ -22,24 +23,40 @@ const reducer = (state, action) => {
       } else {
         if (oldState[indexItem].count) {
           oldState[indexItem].count += 1;
+          action.payload.subtotal =
+            action.payload.subtotal + action.payload.product_price;
         } else {
           oldState[indexItem].count = 1;
         }
 
         if (oldState[indexItem].subtotal) {
-          action.payload.subtotal =
-            action.payload.subtotal + action.payload.product_price;
         }
       }
       console.log('Add state');
       return [...oldState];
     }
 
-    case TYPES.delete:
-      return state.filter((item) => item.id !== action.payload);
+    case TYPES.delete: {
+      const newState = state.filter((item) => item._id !== action.payload._id);
+
+      console.log(newState, 'DELETE');
+
+      return newState;
+    }
 
     case TYPES.filter:
       return state;
+
+    case TYPES.deleteOne: {
+      const oldState = state;
+      const indexItem = oldState.findIndex(
+        (element) => element._id === action.payload._id
+      );
+
+      oldState[indexItem].count -= 1;
+
+      return [...oldState];
+    }
 
     default:
       return state;

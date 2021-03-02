@@ -70,6 +70,10 @@ const Login = () => {
     sendForm(inputs);
   };
 
+  const handleOnClickSignUp = () => {
+    history.push('/signup');
+  };
+
   return (
     <LoginWrapper>
       <LoginForm onSubmit={handleSubmit}>
@@ -105,7 +109,11 @@ const Login = () => {
 
         {isLoginFailed && <ButtonIncorrect>INCORRECTO</ButtonIncorrect>}
 
-        <Button type="submit">INICIAR SESION</Button>
+        <Button type="submit">INICIAR SESIÓN</Button>
+
+        <ButtonRegistrarse type="submit" onClick={handleOnClickSignUp}>
+          REGÍSTRATE
+        </ButtonRegistrarse>
       </LoginForm>
     </LoginWrapper>
   );
@@ -129,7 +137,7 @@ const StandUpLogoWrapper = styled.div`
 const LoginForm = styled.form`
   background-color: #4c45b3;
   width: 600px;
-  height: 600px;
+  height: 700px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,5 +202,25 @@ const ButtonIncorrect = styled.div`
   justify-content: center;
   margin-bottom: 36px;
   cursor: pointer;
+`;
+
+const ButtonRegistrarse = styled.div`
+  background-color: #ceccff;
+  width: 100%;
+  height: 48px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin-bottom: 36px;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.2);
+  :active {
+    box-shadow: 0 1px 3px hsla(0, 0%, 0%, 0.2);
+  }
+
+  :focus {
+    outline: none;
+  }
 `;
 export default Login;

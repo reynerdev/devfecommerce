@@ -23,7 +23,7 @@ const SignUp = () => {
         .then(function (response) {
           console.log(response);
           if (inputs.password === inputs.password_confirmation) {
-            history.push('/');
+            history.push('/login');
           }
         })
         .catch(function (error) {
