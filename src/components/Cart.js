@@ -43,16 +43,24 @@ const Cart = () => {
         <ShoppingCartWrapper>
           <ShoppingCartTitle>Shoppping Cart</ShoppingCartTitle>
           <ShoppingCartList>
-            {shoppingCarItems.map((element, index) => {
-              return (
-                <ItemCart
-                  item={element}
-                  key={index}
-                  setTotal={setTotal}
-                  total={total}
-                />
-              );
-            })}
+            {shoppingCarItems.length !== 0 ? (
+              shoppingCarItems.map((element, index) => {
+                return (
+                  <ItemCart
+                    item={element}
+                    key={index}
+                    setTotal={setTotal}
+                    total={total}
+                  />
+                );
+              })
+            ) : (
+              <h1
+                style={{ width: '780px', color: '#7B8794', fontSize: '24px' }}
+              >
+                No items
+              </h1>
+            )}
           </ShoppingCartList>
         </ShoppingCartWrapper>
       </LeftSideWrapper>

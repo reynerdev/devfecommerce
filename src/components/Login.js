@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LogoDevf from '../assets/DEVF.svg';
 import iconLogo from '../assets/ManStandUp.svg';
@@ -13,9 +13,13 @@ const Login = () => {
   const [inputs, handleInputs] = useForm(TYPEFORM.logIn);
   const [isLoginFailed, setIsLoginFailed] = useState(false);
   const history = useHistory();
+  const { setIsLoginClicked, setUser, user, isLoginClicked } = useContext(
+    UserContext
+  );
 
-  const { setIsLoginClicked, setUser, user } = useContext(UserContext);
-
+  useEffect(() => {
+    setIsLoginClicked(true);
+  }, []);
   const sendForm = (inputs) => {
     console.log('sendForm');
     axios

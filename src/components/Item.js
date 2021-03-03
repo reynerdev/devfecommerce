@@ -48,7 +48,9 @@ const Item = () => {
                   payload: {
                     _id: element._id,
                     product_name: element.product_name,
-                    product_description: element.product_description,
+                    product_description: element.description,
+                    product_price: element.price,
+                    product_image: element.image,
                   },
                 });
                 setShoppingCartCount(shoppingCartCount + 1);
