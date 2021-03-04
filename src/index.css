@@ -23,7 +23,8 @@
 }
 
 .container {
-  width: 1366px;
+  /* width: 1366px; */
+  width: 1466px;
 }
 
 .UpperContent-Left {
@@ -40,4 +41,8 @@
 
 .cardDescription {
   /* height: 100vh; */
+}
+
+.centerTable {
+  margin: 0 auto;
 }
