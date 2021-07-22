@@ -28,7 +28,11 @@ const ProductCard = ({ element, index }) => {
   };
 
   return (
-    <Card className={'item mt-6 ml-6 '} key={index} onClick={handleOnClickCart}>
+    <Card
+      className={'item mt-6 ml-6 bg-white	 '}
+      key={index}
+      onClick={handleOnClickCart}
+    >
       <CardImg>
         <img
           src={!element.image ? noImage : element.image}

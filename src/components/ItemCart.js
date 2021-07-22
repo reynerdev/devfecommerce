@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, forwardRef } from 'react';
 import styled from 'styled-components';
 import Plus from '../assets/plus.svg';
 import Minus from '../assets/minus.svg';
@@ -7,7 +7,7 @@ import UserContext, { TYPES } from '../contexts/UserContext';
 const logo =
   'https://www.sincable.mx/wp-content/uploads/2020/01/patrick-ward-z_dLXnQg0JY-unsplash-1024x664.jpg';
 
-const ItemCart = ({ item, setTotal, total }) => {
+const ItemCart = ({ item, setTotal, total, updateSubtotal }) => {
   console.log(item, 'ITEMMMMMMMMMMMM');
 
   const {
@@ -37,8 +37,10 @@ const ItemCart = ({ item, setTotal, total }) => {
   };
 
   useEffect(() => {
-    setTotal(total + item.subtotal);
-  }, [shoppingCartCount]);
+    // setTotal(total + item.subtotal)
+    console.log('ITEM CAR RENDERED', item.subtotal);
+    updateSubtotal(parseInt(item.subtotal));
+  }, []);
   return (
     <ItemCartWrapper className="mb-5">
       <LogoWrapper>

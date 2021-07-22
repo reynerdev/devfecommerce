@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState, useContext } from 'react';
 import MaterialTable from 'material-table';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -17,9 +17,11 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-// import Alert from '@material-ui/lab/Alert';
-
+import UserContext from '../contexts/UserContext';
 import iconPerson from '../assets/usuario.svg';
+import ClientsTable from './ClientsTable';
+import { useHistory } from 'react-router-dom';
+
 const columns = [
   { title: '_id', field: '_id', hidden: true },
   { title: 'Product Name', field: 'product_name' },
@@ -66,10 +68,13 @@ const styles = {
   },
 };
 const Admin = () => {
+  const { setIsLoginClicked } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [iserror, setIserror] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]);
+  const [view, setView] = useState(true);
   useEffect(() => {
+    setIsLoginClicked(true);
     axios
       .get('https://ecomerce-master.herokuapp.com/api/v1/item')
       .then((res) => {
@@ -133,6 +138,10 @@ const Admin = () => {
       resolve();
     }
   };
+  const history = useHistory();
+  const handleOnClickHome = () => {
+    history.push('/');
+  };
 
   return (
     <ContainerAdmin>
@@ -145,26 +154,31 @@ const Admin = () => {
           />
         </Logo>
 
-        <Home>Home</Home>
+        <Home onClick={handleOnClickHome}>Home</Home>
 
-        <Clients>Clients</Clients>
+        <Clients onClick={() => setView(false)}>Clients</Clients>
 
-        <Products>Products</Products>
+        <Products oncClick={() => setView(true)}>Products</Products>
       </SideBar>
-      <div className="flex justify-center centerTable">
-        <MaterialTable
-          title="Tabla de Datos"
-          columns={columns}
-          data={data}
-          icons={tableIcons}
-          editable={{
-            onRowAdd: (newData) =>
-              new Promise((resolve) => {
-                handleRowAdd(newData, resolve);
-              }),
-          }}
-        />
-      </div>
+
+      {view ? (
+        <div className="flex justify-center centerTable items-start mt-8  ">
+          <MaterialTable
+            title="Tabla de Datos Productos"
+            columns={columns}
+            data={data}
+            icons={tableIcons}
+            editable={{
+              onRowAdd: (newData) =>
+                new Promise((resolve) => {
+                  handleRowAdd(newData, resolve);
+                }),
+            }}
+          />
+        </div>
+      ) : (
+        <ClientsTable />
+      )}
     </ContainerAdmin>
   );
 };
@@ -193,6 +207,7 @@ const SideBar = styled.div`
   color: white;
   div {
     margin-top: 48px;
+    cursor: pointer;
   }
 `;
 

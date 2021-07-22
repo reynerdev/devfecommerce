@@ -20,6 +20,7 @@ const Login = () => {
   useEffect(() => {
     setIsLoginClicked(true);
   }, []);
+
   const sendForm = (inputs) => {
     console.log('sendForm');
     axios
@@ -28,12 +29,11 @@ const Login = () => {
         password: inputs.password,
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data, 'ResponseLogin');
 
         const { token } = response.data;
 
         window.localStorage.setItem('token', token);
-        setIsLoginClicked(false);
 
         return token;
       })
@@ -59,7 +59,12 @@ const Login = () => {
           _id: userData.user._id,
           role: userData.user.role,
         });
-        history.push('/');
+        setIsLoginClicked(false);
+        if (userData.user.role === 'ADMIN') {
+          history.push('/admin');
+        } else {
+          history.push('/');
+        }
       })
       .catch(function (error) {
         setIsLoginFailed(true);

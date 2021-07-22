@@ -23,13 +23,13 @@ const reducer = (state, action) => {
       } else {
         if (oldState[indexItem].count) {
           oldState[indexItem].count += 1;
-          action.payload.subtotal =
-            action.payload.subtotal + action.payload.product_price;
+          oldState[indexItem].subtotal =
+            oldState[indexItem].subtotal + action.payload.product_price;
+          // action.payload.subtotal =
+          //   action.payload.subtotal + action.payload.product_price;
+          return [...oldState];
         } else {
           oldState[indexItem].count = 1;
-        }
-
-        if (oldState[indexItem].subtotal) {
         }
       }
       console.log('Add state');
@@ -55,6 +55,9 @@ const reducer = (state, action) => {
 
       oldState[indexItem].count -= 1;
 
+      oldState[indexItem].subtotal =
+        oldState[indexItem].subtotal - action.payload.product_price;
+
       return [...oldState];
     }
 
@@ -70,6 +73,7 @@ const UserProvider = ({ children }) => {
   const [shoppingCarItems, dispatchShoppingCart] = useReducer(reducer, []);
   const [user, setUser] = useState(null);
   const [isLoginClicked, setIsLoginClicked] = useState(false);
+  const [search, setSearch] = useState('');
   const data = {
     user,
     isLoginClicked,
@@ -79,6 +83,8 @@ const UserProvider = ({ children }) => {
     dispatchShoppingCart,
     shoppingCartCount,
     setShoppingCartCount,
+    search,
+    setSearch,
   };
 
   return <UserContext.Provider value={data}>{children}</UserContext.Provider>;

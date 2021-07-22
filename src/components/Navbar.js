@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LogoDevf from '../assets/DEVF.svg';
 import SearchIcon from '@material-ui/icons/Search';
@@ -14,7 +14,11 @@ const Navbar = () => {
     shoppingCarItems,
     shoppingCartCount,
     setShoppingCartCount,
+    search,
+    setSearch,
   } = useContext(UserContext);
+
+  const [text, setText] = useState('');
   const history = useHistory();
 
   const handleLoginClick = () => {
@@ -39,6 +43,13 @@ const Navbar = () => {
     history.push('/');
   };
 
+  const handleOnSearch = () => {
+    console.log('HandleOnSearch');
+    setSearch(text);
+  };
+
+  // const filteredProducts = users.filteredProducts(user => ())
+
   return (
     <div className="navbar ">
       <div className="navbar-container ">
@@ -47,8 +58,12 @@ const Navbar = () => {
         </LogoWrapper>
         <SearchWrapper>
           <SearchBarWrapper>
-            <SearchIcon />
-            <input type="text" placeholder="Search Products" />
+            <SearchIcon onClick={handleOnSearch} />
+            <input
+              type="text"
+              placeholder="Search Products"
+              onChange={(e) => setText(e.target.value)}
+            />
           </SearchBarWrapper>
         </SearchWrapper>
 

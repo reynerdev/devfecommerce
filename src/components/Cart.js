@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import ItemCart from './ItemCart';
 import arrowLeft from '../assets/arrowLeft.svg';
@@ -9,17 +9,18 @@ const Cart = () => {
   const history = useHistory();
   const [total, setTotal] = useState(0);
   const { shoppingCarItems } = useContext(UserContext);
+  const totalRef = useRef(0);
 
   console.log(shoppingCarItems, 'Shopping Car Item');
 
   const handleOnCLickContinueShopping = () => {
-    history.goBack();
+    history.push('/');
   };
 
-  const orderSummaryItem = (name, subTotal) => {
+  const orderSummaryItem = (name, subTotal, index) => {
     console.log('orderSummaryItem');
     return (
-      <div className="flex subtotal">
+      <div className="flex subtotal" key={index}>
         <div className="" style={{ width: '200px', marginRight: '50px' }}>
           {name}
         </div>
@@ -27,6 +28,17 @@ const Cart = () => {
       </div>
     );
   };
+
+  const updateSubtotal = (subtotal) => {
+    totalRef.current += totalRef.current + subtotal;
+    console.log(totalRef.current, 'SUBTOTAL');
+  };
+
+  useEffect(() => {
+    console.log('RENDER CART', totalRef.current);
+
+    setTotal(totalRef.current);
+  }, [totalRef]);
 
   return (
     <Container className="flex justify-content">
@@ -51,6 +63,7 @@ const Cart = () => {
                     key={index}
                     setTotal={setTotal}
                     total={total}
+                    updateSubtotal={updateSubtotal}
                   />
                 );
               })
@@ -66,8 +79,12 @@ const Cart = () => {
       </LeftSideWrapper>
       <OrderSummaryWrapper>
         <div className="mb-5">Order Summary</div>
-        {shoppingCarItems.map((element) => {
-          return orderSummaryItem(element.product_name, element.subtotal);
+        {shoppingCarItems.map((element, index) => {
+          return orderSummaryItem(
+            element.product_name,
+            element.subtotal,
+            index
+          );
         })}
         <Total>Total: {total}</Total>
         <div className="flex justify-center">
